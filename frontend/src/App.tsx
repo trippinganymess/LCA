@@ -48,6 +48,15 @@ function App() {
   const handleLogin = (userData: User) => {
     setUser(userData);
     localStorage.setItem('lca_user', JSON.stringify(userData));
+    
+    // Load user's group if they have one
+    if (userData.groupId) {
+      const allGroups = JSON.parse(localStorage.getItem('lca_groups') || '[]');
+      const userGroup = allGroups.find((g: Group) => g.id === userData.groupId);
+      if (userGroup) {
+        setCurrentGroup(userGroup);
+      }
+    }
   };
 
   const handleJoinGroup = (groupData: Group, isCreator: boolean = false) => {
@@ -132,14 +141,14 @@ function App() {
           <Route 
             path="/login" 
             element={
-              user ? <Navigate to="/groups" replace /> : 
+              user ? (currentGroup ? <Navigate to="/app" replace /> : <Navigate to="/groups" replace />) : 
               <Login onLogin={handleLogin} />
             } 
           />
           <Route 
             path="/register" 
             element={
-              user ? <Navigate to="/groups" replace /> : 
+              user ? (currentGroup ? <Navigate to="/app" replace /> : <Navigate to="/groups" replace />) : 
               <Register onRegister={handleLogin} />
             } 
           />
