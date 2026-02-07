@@ -98,7 +98,7 @@ const Register: React.FC<RegisterProps> = ({ onRegister }) => {
   return (
     <div className="auth-container">
       <div className="auth-card">
-        <h2>Register for LCA</h2>
+        <h1>⊕ REGISTER</h1>
         
         {errors.length > 0 && (
           <div className="error-messages">
@@ -136,27 +136,27 @@ const Register: React.FC<RegisterProps> = ({ onRegister }) => {
           </div>
           
           <div className="form-group">
-            <label htmlFor="password">Password</label>
+            <label htmlFor="password">PASSKEY</label>
             <input
               type="password"
               id="password"
               name="password"
               value={formData.password}
               onChange={handleChange}
-              placeholder="Choose a password (min 6 characters)"
+              placeholder="Choose a passkey (min 6 chars)"
               required
             />
           </div>
           
           <div className="form-group">
-            <label htmlFor="confirmPassword">Confirm Password</label>
+            <label htmlFor="confirmPassword">CONFIRM PASSKEY</label>
             <input
               type="password"
               id="confirmPassword"
               name="confirmPassword"
               value={formData.confirmPassword}
               onChange={handleChange}
-              placeholder="Confirm your password"
+              placeholder="Confirm your passkey"
               required
             />
           </div>
@@ -166,7 +166,7 @@ const Register: React.FC<RegisterProps> = ({ onRegister }) => {
             className="auth-button"
             disabled={isLoading}
           >
-            {isLoading ? 'Creating account...' : 'Register'}
+            {isLoading ? 'INITIALIZING...' : '⊕ CREATE IDENTITY'}
           </button>
         </form>
         

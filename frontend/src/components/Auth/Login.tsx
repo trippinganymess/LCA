@@ -69,7 +69,7 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
   return (
     <div className="auth-container">
       <div className="auth-card">
-        <h2>Login to LCA</h2>
+        <h1>Login</h1>
         
         {errors.length > 0 && (
           <div className="error-messages">
@@ -94,14 +94,14 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
           </div>
           
           <div className="form-group">
-            <label htmlFor="password">Password</label>
+            <label htmlFor="password">PASSKEY</label>
             <input
               type="password"
               id="password"
               name="password"
               value={formData.password}
               onChange={handleChange}
-              placeholder="Enter your password"
+              placeholder="Enter your passkey"
               required
             />
           </div>

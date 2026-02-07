@@ -4,6 +4,7 @@ import Login from './components/Auth/Login';
 import Register from './components/Auth/Register';
 import GroupSelection from './components/Groups/GroupSelection';
 import MainApp from './components/MainApp';
+import Hero from './components/Hero/Hero';
 import './App.css';
 
 export interface User {
@@ -12,6 +13,7 @@ export interface User {
   email: string;
   groupId?: string | null;  // Track which group user belongs to
   createdGroupId?: string | null;  // Track which group user created
+  avatarIndex?: number;  // Profile avatar index (0-8)
 }
 
 export interface Group {
@@ -60,11 +62,16 @@ function App() {
   };
 
   const handleJoinGroup = (groupData: Group, isCreator: boolean = false) => {
-    // Update user with group information
+    // Assign avatar index based on position in group
+    const memberIndex = groupData.members.length - 1; // User is already in members array
+    const avatarIndex = memberIndex % 9; // 9 available avatars (0-8)
+    
+    // Update user with group information and avatar
     const updatedUser = {
       ...user!,
       groupId: groupData.id,
-      createdGroupId: isCreator ? groupData.id : user!.createdGroupId
+      createdGroupId: isCreator ? groupData.id : user!.createdGroupId,
+      avatarIndex: avatarIndex
     };
     
     setUser(updatedUser);
@@ -77,7 +84,7 @@ function App() {
     const allUsers = JSON.parse(localStorage.getItem('lca_users') || '[]');
     const userIndex = allUsers.findIndex((u: any) => u.id === updatedUser.id);
     if (userIndex !== -1) {
-      allUsers[userIndex] = { ...allUsers[userIndex], groupId: groupData.id, createdGroupId: isCreator ? groupData.id : allUsers[userIndex].createdGroupId };
+      allUsers[userIndex] = { ...allUsers[userIndex], groupId: groupData.id, createdGroupId: isCreator ? groupData.id : allUsers[userIndex].createdGroupId, avatarIndex: avatarIndex };
       localStorage.setItem('lca_users', JSON.stringify(allUsers));
     }
   };
@@ -134,42 +141,48 @@ function App() {
     // Don't remove group from storage - it's persistent
   };
 
+  // Show Hero only on login/register pages (unauthenticated)
+  const showHero = !user;
+
   return (
     <Router>
       <div className="App">
-        <Routes>
-          <Route 
-            path="/login" 
-            element={
-              user ? (currentGroup ? <Navigate to="/app" replace /> : <Navigate to="/groups" replace />) : 
-              <Login onLogin={handleLogin} />
-            } 
-          />
-          <Route 
-            path="/register" 
-            element={
-              user ? (currentGroup ? <Navigate to="/app" replace /> : <Navigate to="/groups" replace />) : 
-              <Register onRegister={handleLogin} />
-            } 
-          />
-          <Route 
-            path="/groups" 
-            element={
-              !user ? <Navigate to="/login" replace /> :
-              currentGroup ? <Navigate to="/app" replace /> :
-              <GroupSelection user={user} onJoinGroup={handleJoinGroup} />
-            } 
-          />
-          <Route 
-            path="/app" 
-            element={
-              !user ? <Navigate to="/login" replace /> :
-              !currentGroup ? <Navigate to="/groups" replace /> :
-              <MainApp user={user} group={currentGroup} onLogout={handleLogout} onLeaveGroup={handleLeaveGroup} />
-            } 
-          />
-          <Route path="/" element={<Navigate to="/login" replace />} />
-        </Routes>
+        {showHero && <Hero />}
+        <div className={showHero ? "content-reveal" : ""}>
+          <Routes>
+            <Route 
+              path="/login" 
+              element={
+                user ? (currentGroup ? <Navigate to="/app" replace /> : <Navigate to="/groups" replace />) : 
+                <Login onLogin={handleLogin} />
+              } 
+            />
+            <Route 
+              path="/register" 
+              element={
+                user ? (currentGroup ? <Navigate to="/app" replace /> : <Navigate to="/groups" replace />) : 
+                <Register onRegister={handleLogin} />
+              } 
+            />
+            <Route 
+              path="/groups" 
+              element={
+                !user ? <Navigate to="/login" replace /> :
+                currentGroup ? <Navigate to="/app" replace /> :
+                <GroupSelection user={user} onJoinGroup={handleJoinGroup} />
+              } 
+            />
+            <Route 
+              path="/app" 
+              element={
+                !user ? <Navigate to="/login" replace /> :
+                !currentGroup ? <Navigate to="/groups" replace /> :
+                <MainApp user={user} group={currentGroup} onLogout={handleLogout} onLeaveGroup={handleLeaveGroup} />
+              } 
+            />
+            <Route path="/" element={<Navigate to="/login" replace />} />
+          </Routes>
+        </div>
       </div>
     </Router>
   );

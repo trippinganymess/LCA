@@ -1,0 +1,186 @@
+.members-gallery-container {
+  width: 100vw;
+  max-width: 1200px;
+  margin: 4rem auto;
+  padding: 2rem 1rem;
+  position: relative;
+}
+
+.gallery-title {
+  text-align: center;
+  color: #000000;
+  font-weight: 700;
+  font-size: 2.5rem;
+  margin-bottom: 3rem;
+  letter-spacing: 0.1rem;
+}
+
+.scroll-progress {
+  position: absolute;
+  top: -20px;
+  left: 50%;
+  transform: translateX(-50%) rotate(-90deg);
+  z-index: 10;
+}
+
+.progress-bg {
+  stroke: #C5AFA0;
+  stroke-dashoffset: 0;
+  stroke-width: 10%;
+  fill: none;
+  stroke-linecap: round;
+}
+
+.progress-indicator {
+  stroke: #DDA15E;
+  stroke-dashoffset: 0;
+  stroke-width: 10%;
+  fill: none;
+  stroke-linecap: round;
+}
+
+.members-scroll-list {
+  display: flex;
+  list-style: none;
+  height: 320px;
+  overflow-x: scroll;
+  overflow-y: hidden;
+  padding: 20px 0;
+  margin: 0 auto;
+  gap: 30px;
+  scroll-behavior: smooth;
+  width: 100%;
+  max-width: 100%;
+  -webkit-overflow-scrolling: touch;
+}
+
+.members-scroll-list::-webkit-scrollbar {
+  height: 8px;
+  background: rgba(197, 175, 160, 0.3);
+  border-radius: 10px;
+}
+
+.members-scroll-list::-webkit-scrollbar-thumb {
+  background: #DDA15E;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.members-scroll-list::-webkit-scrollbar-thumb:hover {
+  background: #C5AFA0;
+}
+
+.members-scroll-list::-webkit-scrollbar-corner {
+  background: rgba(197, 175, 160, 0.3);
+}
+
+.member-scroll-card {
+  flex: 0 0 280px;
+  height: 280px;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  transition: transform 0.3s ease;
+  position: relative;
+}
+
+.member-scroll-card:hover {
+  transform: scale(1.05);
+}
+
+.card-content {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 1.5rem;
+  background: rgba(254, 250, 224, 0.95);
+  backdrop-filter: blur(10px);
+}
+
+.member-card-image {
+  width: 120px;
+  height: 120px;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 4px solid #000000;
+  margin-bottom: 1rem;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+.member-card-info {
+  text-align: center;
+  width: 100%;
+}
+
+.member-card-info h4 {
+  color: #000000;
+  font-size: 1.4rem;
+  font-weight: 700;
+  margin: 0 0 0.3rem 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.member-role {
+  color: #000000;
+  font-size: 1rem;
+  font-weight: 600;
+  margin: 0 0 0.8rem 0;
+  font-style: italic;
+}
+
+.current-user-badge {
+  display: inline-block;
+  background: linear-gradient(135deg, #94A187 0%, #C5AFA0 100%);
+  color: #000000;
+  padding: 0.4rem 1rem;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+}
+
+@media (max-width: 768px) {
+  .members-gallery-container {
+    max-width: 100%;
+    padding: 2rem 0.5rem;
+  }
+
+  .gallery-title {
+    font-size: 2rem;
+  }
+
+  .member-scroll-card {
+    flex: 0 0 240px;
+    height: 240px;
+  }
+
+  .member-card-image {
+    width: 100px;
+    height: 100px;
+  }
+
+  .member-card-info h4 {
+    font-size: 1.2rem;
+  }
+
+  .member-role {
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .member-scroll-card {
+    flex: 0 0 200px;
+    height: 200px;
+  }
+
+  .member-card-image {
+    width: 80px;
+    height: 80px;
+  }
+}

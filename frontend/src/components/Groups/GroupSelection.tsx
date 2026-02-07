@@ -39,6 +39,12 @@ const GroupSelection: React.FC<GroupSelectionProps> = ({ user, onJoinGroup }) =>
         return;
       }
 
+      // Check if group is full (max 10 members)
+      if (targetGroup.members.length >= 10) {
+        setErrors(['This group is full. Maximum 10 members allowed per group.']);
+        return;
+      }
+
       // Add user to group
       targetGroup.members.push(user);
       saveGroups(groups);
@@ -98,12 +104,12 @@ const GroupSelection: React.FC<GroupSelectionProps> = ({ user, onJoinGroup }) =>
     
     return (
       <div className="group-selection-card">
-        <h2>Welcome, {user.username}!</h2>
-        <p>Choose how you'd like to proceed:</p>
+        <h2>⟁ Welcome, {user.username}</h2>
+        <p>Select your operation:</p>
         
         {(hasCreatedGroup || isInGroup) && (
           <div className="info-message">
-            ℹ️ You {hasCreatedGroup ? 'have already created a group' : 'are currently in a group'}. 
+            ⚠ You {hasCreatedGroup ? 'have already created a group' : 'are currently in a group'}. 
             Leave your current group to create a new one.
           </div>
         )}
@@ -114,9 +120,9 @@ const GroupSelection: React.FC<GroupSelectionProps> = ({ user, onJoinGroup }) =>
             onClick={() => setMode('join')}
             disabled={isInGroup}
           >
-            <div className="option-icon">🔑</div>
-            <h3>Join Existing Group</h3>
-            <p>Enter an 8-letter group key to join your friends</p>
+            <div className="option-icon">⟐</div>
+            <h3>Access Existing Node</h3>
+            <p>Enter an 8-letter access key to sync with your crew</p>
             {isInGroup && <small className="disabled-text">You are already in a group</small>}
           </button>
           
@@ -125,9 +131,9 @@ const GroupSelection: React.FC<GroupSelectionProps> = ({ user, onJoinGroup }) =>
             onClick={() => setMode('create')}
             disabled={hasCreatedGroup || isInGroup}
           >
-            <div className="option-icon">➕</div>
-            <h3>Create New Group</h3>
-            <p>Start a new group and get a unique group key</p>
+            <div className="option-icon">⊕</div>
+            <h3>Initialize New Node</h3>
+            <p>Spin up a new node and generate a unique access key</p>
             {(hasCreatedGroup || isInGroup) && (
               <small className="disabled-text">
                 {hasCreatedGroup ? 'You already created a group' : 'Leave current group first'}
@@ -141,8 +147,8 @@ const GroupSelection: React.FC<GroupSelectionProps> = ({ user, onJoinGroup }) =>
 
   const renderJoinMode = () => (
     <div className="group-action-card">
-      <h2>Join a Group</h2>
-      <p>Enter the 8-letter group key shared by your friend:</p>
+      <h2>⟐ Access Node</h2>
+      <p>Enter the 8-char access key transmitted by your crew:</p>
       
       {errors.length > 0 && (
         <div className="error-messages">
@@ -153,17 +159,17 @@ const GroupSelection: React.FC<GroupSelectionProps> = ({ user, onJoinGroup }) =>
       )}
       
       <div className="form-group">
-        <label htmlFor="groupKey">Group Key</label>
+        <label htmlFor="groupKey">ACCESS KEY</label>
         <input
           type="text"
           id="groupKey"
           value={groupKey}
           onChange={(e) => setGroupKey(e.target.value.toUpperCase())}
-          placeholder="Enter 8-letter group key (e.g., ABCD1234)"
+          placeholder="ENTER 8-CHAR KEY"
           maxLength={8}
           className="group-key-input"
         />
-        <small>Key should be exactly 8 uppercase letters</small>
+        <small>Key should be exactly 8 uppercase characters</small>
       </div>
       
       <div className="button-group">
@@ -172,13 +178,13 @@ const GroupSelection: React.FC<GroupSelectionProps> = ({ user, onJoinGroup }) =>
           disabled={isLoading || groupKey.length !== 8}
           className="primary-button"
         >
-          {isLoading ? 'Joining...' : 'Join Group'}
+          {isLoading ? 'SYNCING...' : '⟐ SYNC'}
         </button>
         <button 
           onClick={() => {setMode('select'); setErrors([]); setGroupKey('');}}
           className="secondary-button"
         >
-          Back
+          ◂ BACK
         </button>
       </div>
     </div>
@@ -186,8 +192,8 @@ const GroupSelection: React.FC<GroupSelectionProps> = ({ user, onJoinGroup }) =>
 
   const renderCreateMode = () => (
     <div className="group-action-card">
-      <h2>Create a New Group</h2>
-      <p>Give your group a name. You'll receive a unique 8-letter key to share with friends:</p>
+      <h2>⊕ Initialize Node</h2>
+      <p>Designate your node. A unique 8-char access key will be generated:</p>
       
       {errors.length > 0 && (
         <div className="error-messages">
@@ -198,13 +204,13 @@ const GroupSelection: React.FC<GroupSelectionProps> = ({ user, onJoinGroup }) =>
       )}
       
       <div className="form-group">
-        <label htmlFor="groupName">Group Name</label>
+        <label htmlFor="groupName">NODE DESIGNATION</label>
         <input
           type="text"
           id="groupName"
           value={groupName}
           onChange={(e) => setGroupName(e.target.value)}
-          placeholder="Enter a name for your group"
+          placeholder="Enter node designation"
           maxLength={50}
         />
       </div>
@@ -215,13 +221,13 @@ const GroupSelection: React.FC<GroupSelectionProps> = ({ user, onJoinGroup }) =>
           disabled={isLoading || !groupName.trim()}
           className="primary-button"
         >
-          {isLoading ? 'Creating...' : 'Create Group'}
+          {isLoading ? 'INITIALIZING...' : '⊕ DEPLOY'}
         </button>
         <button 
           onClick={() => {setMode('select'); setErrors([]); setGroupName('');}}
           className="secondary-button"
         >
-          Back
+          ◂ BACK
         </button>
       </div>
     </div>
