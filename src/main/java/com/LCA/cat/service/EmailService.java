@@ -3,87 +3,54 @@ package com.LCA.cat.service;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import java.io.OutputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.nio.charset.StandardCharsets;
+import javax.mail.*;
+import javax.mail.internet.*;
+import java.util.Properties;
 
 /**
- * Service for sending email invitations via Resend API (HTTP-based, no SMTP needed)
+ * Service for sending email invitations via Gmail SMTP directly
  */
 @Service
 public class EmailService {
 
-    @Value("${resend.api.key:re_dummy}")
-    private String resendApiKey;
+    @Value("${mail.username:dummy@gmail.com}")
+    private String username;
 
-    @Value("${resend.from.email:onboarding@resend.dev}")
-    private String fromEmail;
+    @Value("${mail.password:dummy-password}")
+    private String password;
 
     /**
-     * Send group invitation email via Resend HTTP API
+     * Send group invitation email via Gmail SMTP
      */
     public void sendInvitation(String groupName, String groupKey, String inviterName, 
                               String inviterEmail, String recipientEmail) throws Exception {
         
-        String htmlContent = buildEmailContent(groupName, groupKey, inviterName, inviterEmail);
-        String subject = "You're invited to join " + groupName + " on LCA!";
+        Properties props = new Properties();
+        props.put("mail.smtp.auth", "true");
+        props.put("mail.smtp.ssl.enable", "true");
+        props.put("mail.smtp.host", "smtp.gmail.com");
+        props.put("mail.smtp.port", "465");
+        props.put("mail.smtp.ssl.trust", "smtp.gmail.com");
+        props.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
+        props.put("mail.smtp.socketFactory.port", "465");
+        props.put("mail.smtp.connectiontimeout", "30000");
+        props.put("mail.smtp.timeout", "30000");
+        props.put("mail.smtp.writetimeout", "30000");
 
-        // Build JSON payload for Resend API
-        String jsonPayload = String.format(
-            "{\"from\":\"%s\",\"to\":[\"%s\"],\"subject\":\"%s\",\"html\":%s}",
-            fromEmail,
-            recipientEmail,
-            escapeJson(subject),
-            toJsonString(htmlContent)
-        );
-
-        // Send HTTP POST to Resend API
-        URL url = new URL("https://api.resend.com/emails");
-        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-        conn.setRequestMethod("POST");
-        conn.setRequestProperty("Authorization", "Bearer " + resendApiKey);
-        conn.setRequestProperty("Content-Type", "application/json");
-        conn.setDoOutput(true);
-        conn.setConnectTimeout(10000);
-        conn.setReadTimeout(10000);
-
-        try (OutputStream os = conn.getOutputStream()) {
-            os.write(jsonPayload.getBytes(StandardCharsets.UTF_8));
-        }
-
-        int responseCode = conn.getResponseCode();
-        if (responseCode != 200) {
-            // Read error response
-            java.io.InputStream errorStream = conn.getErrorStream();
-            String errorBody = "";
-            if (errorStream != null) {
-                errorBody = new String(errorStream.readAllBytes(), StandardCharsets.UTF_8);
+        Session session = Session.getInstance(props, new Authenticator() {
+            @Override
+            protected PasswordAuthentication getPasswordAuthentication() {
+                return new PasswordAuthentication(username, password);
             }
-            throw new RuntimeException("Resend API error (HTTP " + responseCode + "): " + errorBody);
-        }
+        });
 
-        conn.disconnect();
-    }
+        MimeMessage message = new MimeMessage(session);
+        message.setFrom(new InternetAddress(username));
+        message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(recipientEmail));
+        message.setSubject("You're invited to join " + groupName + " on LCA!");
+        message.setContent(buildEmailContent(groupName, groupKey, inviterName, inviterEmail), "text/html; charset=UTF-8");
 
-    private String escapeJson(String s) {
-        return s.replace("\\", "\\\\").replace("\"", "\\\"");
-    }
-
-    private String toJsonString(String s) {
-        StringBuilder sb = new StringBuilder("\"");
-        for (char c : s.toCharArray()) {
-            switch (c) {
-                case '"': sb.append("\\\""); break;
-                case '\\': sb.append("\\\\"); break;
-                case '\n': sb.append("\\n"); break;
-                case '\r': sb.append("\\r"); break;
-                case '\t': sb.append("\\t"); break;
-                default: sb.append(c);
-            }
-        }
-        sb.append("\"");
-        return sb.toString();
+        Transport.send(message);
     }
 
     /**
