@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { User, Group } from '../App';
 import { PROFILE_AVATARS } from '../utils/profileUtils';
 import RoadmapBuilder from './Roadmap/RoadmapBuilder';
@@ -29,11 +29,7 @@ const MainApp: React.FC<MainAppProps> = ({ user, group, onLogout, onLeaveGroup }
   const [deleteTarget, setDeleteTarget] = useState<Roadmap | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
 
-  useEffect(() => {
-    loadRoadmaps();
-  }, [group.key]);
-
-  const loadRoadmaps = async () => {
+  const loadRoadmaps = useCallback(async () => {
     try {
       setLoadingRoadmaps(true);
       const data = await roadmapAPI.getRoadmapsByGroup(group.key, user.id);
@@ -43,7 +39,11 @@ const MainApp: React.FC<MainAppProps> = ({ user, group, onLogout, onLeaveGroup }
     } finally {
       setLoadingRoadmaps(false);
     }
-  };
+  }, [group.key, user.id]);
+
+  useEffect(() => {
+    loadRoadmaps();
+  }, [loadRoadmaps]);
 
   const copyGroupKey = () => {
     navigator.clipboard.writeText(group.key);

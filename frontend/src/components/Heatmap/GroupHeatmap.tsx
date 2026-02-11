@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { roadmapAPI } from '../../services/roadmapAPI';
 import './GroupHeatmap.css';
 
@@ -13,11 +13,7 @@ const GroupHeatmap: React.FC<GroupHeatmapProps> = ({ memberIds, groupName }) => 
   const [hoveredDay, setHoveredDay] = useState<{ date: string; count: number; x: number; y: number } | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    loadHeatmapData();
-  }, [memberIds]);
-
-  const loadHeatmapData = async () => {
+  const loadHeatmapData = useCallback(async () => {
     if (memberIds.length === 0) return;
     try {
       setLoading(true);
@@ -28,7 +24,11 @@ const GroupHeatmap: React.FC<GroupHeatmapProps> = ({ memberIds, groupName }) => 
     } finally {
       setLoading(false);
     }
-  };
+  }, [memberIds]);
+
+  useEffect(() => {
+    loadHeatmapData();
+  }, [loadHeatmapData]);
 
   // Generate the last 365 days grid (like GitHub)
   const generateCalendarDays = () => {
