@@ -7,6 +7,8 @@ import GroupHeatmap from './Heatmap/GroupHeatmap';
 import { roadmapAPI, Roadmap } from '../services/roadmapAPI';
 import './MainApp.css';
 
+const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:8080/api';
+
 interface MainAppProps {
   user: User;
   group: Group;
@@ -85,7 +87,7 @@ const MainApp: React.FC<MainAppProps> = ({ user, group, onLogout, onLeaveGroup }
 
     try {
       // Call backend API to send email
-      const response = await fetch('http://localhost:8080/api/invitations/send', {
+      const response = await fetch(`${API_BASE_URL}/invitations/send`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import './ProblemList.css';
 
+const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:8080/api';
+
 interface Problem {
   id: number;
   title: string;
@@ -38,7 +40,7 @@ const ProblemList: React.FC<ProblemListProps> = ({ topicId, topicName, userId, o
   const loadProblems = useCallback(async () => {
     try {
       setLoading(true);
-      const response = await fetch(`http://localhost:8080/api/problems/topic/${topicId}?userId=${userId}`);
+      const response = await fetch(`${API_BASE_URL}/problems/topic/${topicId}?userId=${userId}`);
       const result = await response.json();
       if (result.success) {
         setProblems(result.data);
@@ -56,7 +58,7 @@ const ProblemList: React.FC<ProblemListProps> = ({ topicId, topicName, userId, o
 
   const toggleCompletion = async (problemId: number) => {
     try {
-      const response = await fetch('http://localhost:8080/api/problems/toggle', {
+      const response = await fetch(`${API_BASE_URL}/problems/toggle`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ userId, problemId })
