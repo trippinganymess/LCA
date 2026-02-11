@@ -59,13 +59,13 @@ public class InvitationController {
                 .body(new ApiResponse(true, "Invitation sent successfully!"));
 
         } catch (Exception e) {
-            // Log the error (in production, use proper logging framework)
+            // Log the error
             System.err.println("Error sending invitation: " + e.getMessage());
             e.printStackTrace();
 
             return ResponseEntity
                 .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(new ApiResponse(false, "Failed to send invitation. Please try again later."));
+                .body(new ApiResponse(false, "Email error: " + e.getMessage()));
         }
     }
 
