@@ -1,46 +1,89 @@
 package com.LCA.cat.service;
 
-import javax.mail.internet.MimeMessage;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.nio.charset.StandardCharsets;
+
 /**
- * Service for sending email invitations
+ * Service for sending email invitations via Resend API (HTTP-based, no SMTP needed)
  */
 @Service
 public class EmailService {
 
-    @Autowired
-    private JavaMailSender mailSender;
+    @Value("${resend.api.key:re_dummy}")
+    private String resendApiKey;
 
-    @Value("${spring.mail.username}")
+    @Value("${resend.from.email:onboarding@resend.dev}")
     private String fromEmail;
 
     /**
-     * Send group invitation email
-     * @param groupName Name of the group
-     * @param groupKey 8-letter group access key
-     * @param inviterName Name of the person sending the invitation
-     * @param inviterEmail Email of the person sending the invitation
-     * @param recipientEmail Email address to send invitation to
-     * @throws Exception if email sending fails
+     * Send group invitation email via Resend HTTP API
      */
     public void sendInvitation(String groupName, String groupKey, String inviterName, 
                               String inviterEmail, String recipientEmail) throws Exception {
-        MimeMessage message = mailSender.createMimeMessage();
-        MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
-
-        helper.setFrom(fromEmail);
-        helper.setTo(recipientEmail);
-        helper.setSubject("You're invited to join " + groupName + " on LCA!");
-
+        
         String htmlContent = buildEmailContent(groupName, groupKey, inviterName, inviterEmail);
-        helper.setText(htmlContent, true);
+        String subject = "You're invited to join " + groupName + " on LCA!";
 
-        mailSender.send(message);
+        // Build JSON payload for Resend API
+        String jsonPayload = String.format(
+            "{\"from\":\"%s\",\"to\":[\"%s\"],\"subject\":\"%s\",\"html\":%s}",
+            fromEmail,
+            recipientEmail,
+            escapeJson(subject),
+            toJsonString(htmlContent)
+        );
+
+        // Send HTTP POST to Resend API
+        URL url = new URL("https://api.resend.com/emails");
+        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+        conn.setRequestMethod("POST");
+        conn.setRequestProperty("Authorization", "Bearer " + resendApiKey);
+        conn.setRequestProperty("Content-Type", "application/json");
+        conn.setDoOutput(true);
+        conn.setConnectTimeout(10000);
+        conn.setReadTimeout(10000);
+
+        try (OutputStream os = conn.getOutputStream()) {
+            os.write(jsonPayload.getBytes(StandardCharsets.UTF_8));
+        }
+
+        int responseCode = conn.getResponseCode();
+        if (responseCode != 200) {
+            // Read error response
+            java.io.InputStream errorStream = conn.getErrorStream();
+            String errorBody = "";
+            if (errorStream != null) {
+                errorBody = new String(errorStream.readAllBytes(), StandardCharsets.UTF_8);
+            }
+            throw new RuntimeException("Resend API error (HTTP " + responseCode + "): " + errorBody);
+        }
+
+        conn.disconnect();
+    }
+
+    private String escapeJson(String s) {
+        return s.replace("\\", "\\\\").replace("\"", "\\\"");
+    }
+
+    private String toJsonString(String s) {
+        StringBuilder sb = new StringBuilder("\"");
+        for (char c : s.toCharArray()) {
+            switch (c) {
+                case '"': sb.append("\\\""); break;
+                case '\\': sb.append("\\\\"); break;
+                case '\n': sb.append("\\n"); break;
+                case '\r': sb.append("\\r"); break;
+                case '\t': sb.append("\\t"); break;
+                default: sb.append(c);
+            }
+        }
+        sb.append("\"");
+        return sb.toString();
     }
 
     /**
