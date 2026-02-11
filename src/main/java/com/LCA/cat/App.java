@@ -21,15 +21,12 @@ public class App {
         return new WebMvcConfigurer() {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
-                registry.addMapping("/api/**")
-                    .allowedOrigins(
-                        "http://localhost:3000",
-                        "https://*.vercel.app",
-                        "https://your-custom-domain.com"
-                    )
+                registry.addMapping("/**")
+                    .allowedOriginPatterns("*")
                     .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                     .allowedHeaders("*")
-                    .allowCredentials(true);
+                    .allowCredentials(false)
+                    .maxAge(3600);
             }
         };
     }
