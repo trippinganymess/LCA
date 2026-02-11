@@ -1,11 +1,12 @@
 package com.LCA.cat.dto;
 
 /**
- * Data Transfer Object for API responses
+ * Generic Data Transfer Object for API responses
  */
-public class ApiResponse {
+public class ApiResponse<T> {
     private boolean success;
     private String message;
+    private T data;
 
     // Constructors
     public ApiResponse() {
@@ -14,6 +15,21 @@ public class ApiResponse {
     public ApiResponse(boolean success, String message) {
         this.success = success;
         this.message = message;
+    }
+
+    public ApiResponse(boolean success, String message, T data) {
+        this.success = success;
+        this.message = message;
+        this.data = data;
+    }
+
+    // Static factory methods for convenience
+    public static <T> ApiResponse<T> success(String message, T data) {
+        return new ApiResponse<>(true, message, data);
+    }
+
+    public static <T> ApiResponse<T> error(String message) {
+        return new ApiResponse<>(false, message, null);
     }
 
     // Getters and Setters
@@ -33,11 +49,20 @@ public class ApiResponse {
         this.message = message;
     }
 
+    public T getData() {
+        return data;
+    }
+
+    public void setData(T data) {
+        this.data = data;
+    }
+
     @Override
     public String toString() {
         return "ApiResponse{" +
                 "success=" + success +
                 ", message='" + message + '\'' +
+                ", data=" + data +
                 '}';
     }
 }

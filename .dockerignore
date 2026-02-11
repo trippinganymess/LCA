@@ -1,0 +1,41 @@
+# Git files
+.git
+.gitignore
+.github
+
+# IDE files
+.idea
+.vscode
+*.iml
+.DS_Store
+
+# Build artifacts
+target/
+LCA/target/
+*.class
+*.jar
+*.war
+
+# Frontend
+frontend/
+node_modules/
+
+# Documentation
+*.md
+README.md
+PDA.md
+PHASE2_SUMMARY.md
+PHASE3_SUMMARY.md
+
+# Scripts and data files (except liveProblems.json)
+problem_scraper.py
+arrays_hashing_problems.sql
+problems.md
+
+# Test files
+src/test/
+
+# Maven wrapper (optional, keep if you want to use it)
+.mvn/
+mvnw
+mvnw.cmd

@@ -1,0 +1,145 @@
+.roadmap-view {
+  background: #0a0a0f;
+  min-height: 100vh;
+  padding: 2rem;
+}
+
+.roadmap-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid rgba(255, 0, 136, 0.2);
+}
+
+.roadmap-header h2 {
+  color: #ff0088;
+  font-family: 'Orbitron', sans-serif;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-shadow: 0 0 10px rgba(255, 0, 136, 0.5);
+  margin: 0;
+}
+
+.roadmap-selector {
+  background: rgba(15, 15, 25, 0.9);
+  color: #e0e0e0;
+  border: 1px solid rgba(255, 0, 136, 0.3);
+  padding: 0.75rem 1.5rem;
+  border-radius: 4px;
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.roadmap-selector:hover {
+  border-color: #ff0088;
+  box-shadow: 0 0 10px rgba(255, 0, 136, 0.2);
+}
+
+.roadmap-selector:focus {
+  outline: none;
+  border-color: #ff0088;
+  box-shadow: 0 0 15px rgba(255, 0, 136, 0.3);
+}
+
+.roadmap-info {
+  background: rgba(15, 15, 25, 0.9);
+  border: 1px solid rgba(255, 0, 136, 0.15);
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.roadmap-info h3 {
+  color: #dd00ee;
+  font-family: 'Orbitron', sans-serif;
+  font-weight: 600;
+  margin: 0 0 0.5rem 0;
+}
+
+.roadmap-info p {
+  color: #999;
+  font-family: 'Rajdhani', sans-serif;
+  margin: 0;
+}
+
+.roadmap-canvas-container {
+  background: rgba(15, 15, 25, 0.9);
+  border: 1px solid rgba(255, 0, 136, 0.15);
+  border-radius: 12px;
+  padding: 2rem;
+  margin-bottom: 1rem;
+  overflow: auto;
+  box-shadow: 0 5px 30px rgba(0, 0, 0, 0.5);
+}
+
+.roadmap-canvas {
+  display: block;
+  cursor: pointer;
+}
+
+.roadmap-legend {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  padding: 1rem;
+  background: rgba(15, 15, 25, 0.9);
+  border: 1px solid rgba(255, 0, 136, 0.15);
+  border-radius: 8px;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #e0e0e0;
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 0.9rem;
+}
+
+.legend-color {
+  width: 30px;
+  height: 20px;
+  border: 2px solid;
+  border-radius: 3px;
+  background: rgba(15, 15, 25, 0.9);
+}
+
+.roadmap-loading,
+.roadmap-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 60vh;
+  color: #ff0088;
+  font-family: 'Orbitron', sans-serif;
+}
+
+.roadmap-empty h3 {
+  color: #ff0088;
+  font-size: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.roadmap-empty p {
+  color: #888;
+  font-family: 'Rajdhani', sans-serif;
+}
+
+.roadmap-loading {
+  font-size: 1.2rem;
+  animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 0.6;
+  }
+  50% {
+    opacity: 1;
+  }
+}

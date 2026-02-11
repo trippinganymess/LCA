@@ -78,12 +78,12 @@
 }
 
 .app-content {
-  max-width: 1200px;
+  max-width: 1300px;
   margin: 0 auto;
   padding: 2rem;
   display: grid;
   gap: 2rem;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 350px 1fr;
 }
 
 @media (max-width: 768px) {
@@ -100,6 +100,7 @@
   box-shadow: 0 5px 30px rgba(0, 0, 0, 0.5), 0 0 1px rgba(255, 0, 136, 0.3);
   border: 1px solid rgba(255, 0, 136, 0.15);
   backdrop-filter: blur(10px);
+  min-width: 0;
 }
 
 .group-info-card h2 {
@@ -430,6 +431,56 @@
   background: rgba(100, 100, 120, 0.25);
 }
 
+/* Delete Confirmation Modal */
+.delete-modal {
+  border-color: rgba(255, 50, 50, 0.3);
+  box-shadow: 0 10px 50px rgba(255, 50, 50, 0.15), 0 0 1px rgba(255, 50, 50, 0.5);
+}
+
+.delete-modal h3 {
+  color: #ff3232;
+}
+
+.delete-modal-icon {
+  text-align: center;
+  font-size: 2.5rem;
+  margin-bottom: 0.5rem;
+  animation: pulse-warning 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse-warning {
+  0%, 100% { opacity: 0.7; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.1); }
+}
+
+.delete-modal .warning-text {
+  background: rgba(255, 50, 50, 0.08);
+  border-color: rgba(255, 50, 50, 0.3);
+  color: #ff5555;
+  text-align: center;
+  font-size: 0.85rem;
+}
+
+.delete-modal strong {
+  color: #ff0088;
+}
+
+.delete-confirm-button {
+  background: rgba(255, 30, 30, 0.2);
+  color: #ff3232;
+  border-color: rgba(255, 50, 50, 0.5);
+}
+
+.delete-confirm-button:hover {
+  background: rgba(255, 30, 30, 0.35);
+  box-shadow: 0 0 20px rgba(255, 50, 50, 0.3);
+}
+
+.delete-confirm-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
 .invite-button {
   margin-top: 1rem;
   width: 100%;
@@ -522,4 +573,213 @@
   margin-top: 0.25rem;
   color: #666;
   font-size: 0.8rem;
+}
+
+/* Roadmap Section */
+.roadmap-section {
+  margin: 2rem 0;
+  padding: 1.5rem;
+  background: rgba(255, 0, 136, 0.05);
+  border: 1px solid rgba(255, 0, 136, 0.2);
+  border-radius: 8px;
+  max-height: 600px;
+  display: flex;
+  flex-direction: column;
+}
+
+.roadmap-section h4 {
+  color: #dd00ee;
+  margin-bottom: 1.5rem;
+  font-weight: 700;
+  font-family: 'Orbitron', sans-serif;
+  font-size: 1rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  flex-shrink: 0;
+}
+
+.no-roadmaps {
+  text-align: center;
+  padding: 2rem;
+}
+
+.no-roadmaps p {
+  color: #999;
+  margin-bottom: 1rem;
+}
+
+.roadmap-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  max-height: 450px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding-right: 0.5rem;
+}
+
+.roadmap-list::-webkit-scrollbar {
+  width: 8px;
+}
+
+.roadmap-list::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 4px;
+}
+
+.roadmap-list::-webkit-scrollbar-thumb {
+  background: #ff0088;
+  border-radius: 4px;
+  transition: background 0.3s ease;
+}
+
+.roadmap-list::-webkit-scrollbar-thumb:hover {
+  background: #dd00ee;
+}
+
+.roadmap-card {
+  background: rgba(0, 0, 0, 0.4);
+  border: 2px solid rgba(255, 0, 136, 0.3);
+  border-radius: 8px;
+  padding: 1.5rem;
+  transition: all 0.3s ease;
+  width: 100%;
+  flex-shrink: 0;
+}
+
+.roadmap-card:hover {
+  border-color: #ff0088;
+  box-shadow: 0 0 20px rgba(255, 0, 136, 0.3);
+  transform: translateX(5px);
+}
+
+.roadmap-card h5 {
+  margin: 0;
+  color: #ff0088;
+  font-family: 'Orbitron', sans-serif;
+  font-size: 1.1rem;
+  font-weight: 700;
+}
+
+.roadmap-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.delete-roadmap-button {
+  background: transparent;
+  border: 1px solid rgba(255, 50, 50, 0.3);
+  color: rgba(255, 50, 50, 0.5);
+  width: 28px;
+  height: 28px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.8rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  flex-shrink: 0;
+}
+
+.delete-roadmap-button:hover {
+  background: rgba(255, 50, 50, 0.15);
+  border-color: #ff3232;
+  color: #ff3232;
+  box-shadow: 0 0 10px rgba(255, 50, 50, 0.3);
+}
+
+.roadmap-card p {
+  color: #bbb;
+  margin: 0 0 1rem 0;
+  font-size: 0.9rem;
+  line-height: 1.4;
+}
+
+.create-roadmap-button,
+.view-roadmap-button {
+  background: linear-gradient(135deg, #ff0088 0%, #dd00ee 100%);
+  color: #ffffff;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 700;
+  font-size: 0.85rem;
+  font-family: 'Orbitron', sans-serif;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  transition: all 0.3s ease;
+  width: 100%;
+  margin-top: 1rem;
+}
+
+.create-roadmap-button:hover,
+.view-roadmap-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 0 20px rgba(255, 0, 136, 0.6);
+}
+
+.view-roadmap-button {
+  background: transparent;
+  border: 2px solid #ff0088;
+  color: #ff0088;
+  margin-top: 0;
+}
+
+.view-roadmap-button:hover {
+  background: rgba(255, 0, 136, 0.1);
+}
+
+.roadmap-view-modal {
+  background: linear-gradient(135deg, #1a0033 0%, #000000 100%);
+  border: 2px solid #ff0088;
+  box-shadow: 0 0 30px rgba(255, 0, 136, 0.5);
+  border-radius: 12px;
+  width: 90%;
+  max-width: 1200px;
+  height: 80vh;
+  display: flex;
+  flex-direction: column;
+  color: #ffffff;
+  overflow: hidden;
+}
+
+.roadmap-view-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 30px;
+  border-bottom: 2px solid #ff0088;
+  background: rgba(255, 0, 136, 0.1);
+}
+
+.roadmap-view-header h3 {
+  margin: 0;
+  font-family: 'Orbitron', monospace;
+  font-size: 24px;
+  font-weight: 700;
+  color: #ff0088;
+  text-shadow: 0 0 10px rgba(255, 0, 136, 0.8);
+  letter-spacing: 3px;
+}
+
+.roadmap-view-header .close-button {
+  background: transparent;
+  border: 2px solid #ff0088;
+  color: #ff0088;
+  font-size: 24px;
+  width: 40px;
+  height: 40px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.roadmap-view-header .close-button:hover {
+  background: #ff0088;
+  color: #000000;
+  box-shadow: 0 0 15px rgba(255, 0, 136, 0.8);
 }
