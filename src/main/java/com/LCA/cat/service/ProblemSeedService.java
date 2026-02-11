@@ -12,7 +12,6 @@ import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
@@ -61,20 +60,10 @@ public class ProblemSeedService {
             return Map.of("success", false, "message", "No topics found for roadmap");
         }
         
-        // Load problems from liveProblems.json
+        // Load problems from liveProblems.json from classpath
         ObjectMapper mapper = new ObjectMapper();
-        
-        // Try to load from workspace root first, then classpath
-        File problemsFile = new File("/Users/animesh/LCA/liveProblems.json");
-        JsonNode problemsJson;
-        
-        if (problemsFile.exists()) {
-            problemsJson = mapper.readTree(problemsFile);
-        } else {
-            // Fallback to classpath resource
-            Resource resource = new ClassPathResource("liveProblems.json");
-            problemsJson = mapper.readTree(resource.getInputStream());
-        }
+        Resource resource = new ClassPathResource("liveProblems.json");
+        JsonNode problemsJson = mapper.readTree(resource.getInputStream());
         
         int totalSeeded = 0;
         Map<String, Integer> categoryCount = new HashMap<>();
