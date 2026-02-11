@@ -19,25 +19,7 @@ const RoadmapView: React.FC<RoadmapViewProps> = ({ roadmap, groupId, userId, onP
   const draggingRef = useRef<{ topic: Topic; offsetX: number; offsetY: number } | null>(null);
   const isDraggingRef = useRef(false);
 
-  useEffect(() => {
-    if (!roadmap && groupId) {
-      loadRoadmaps();
-    }
-  }, [groupId, userId, roadmap]);
-
-  useEffect(() => {
-    if (roadmap) {
-      setSelectedRoadmap(roadmap);
-    }
-  }, [roadmap]);
-
-  useEffect(() => {
-    if (selectedRoadmap && canvasRef.current) {
-      drawRoadmap();
-    }
-  }, [selectedRoadmap]);
-
-  const loadRoadmaps = async () => {
+  const loadRoadmaps = useCallback(async () => {
     if (!groupId) return;
     try {
       setLoading(true);
@@ -51,9 +33,21 @@ const RoadmapView: React.FC<RoadmapViewProps> = ({ roadmap, groupId, userId, onP
     } finally {
       setLoading(false);
     }
-  };
+  }, [groupId, userId]);
 
-  const drawRoadmap = () => {
+  useEffect(() => {
+    if (!roadmap && groupId) {
+      loadRoadmaps();
+    }
+  }, [roadmap, groupId, loadRoadmaps]);
+
+  useEffect(() => {
+    if (roadmap) {
+      setSelectedRoadmap(roadmap);
+    }
+  }, [roadmap]);
+
+  const drawRoadmap = useCallback(() => {
     const canvas = canvasRef.current;
     if (!canvas || !selectedRoadmap) return;
 
@@ -79,7 +73,13 @@ const RoadmapView: React.FC<RoadmapViewProps> = ({ roadmap, groupId, userId, onP
     selectedRoadmap.topics.forEach(topic => {
       drawTopic(ctx, topic);
     });
-  };
+  }, [selectedRoadmap]);
+
+  useEffect(() => {
+    if (selectedRoadmap && canvasRef.current) {
+      drawRoadmap();
+    }
+  }, [selectedRoadmap, drawRoadmap]);
 
   const drawConnection = (ctx: CanvasRenderingContext2D, from: Topic, to: Topic) => {
     ctx.beginPath();

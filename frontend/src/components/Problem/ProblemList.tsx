@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import './ProblemList.css';
 
 interface Problem {
@@ -35,11 +35,7 @@ const ProblemList: React.FC<ProblemListProps> = ({ topicId, topicName, userId, o
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState<'all' | 'completed' | 'pending'>('all');
 
-  useEffect(() => {
-    loadProblems();
-  }, [topicId, userId]);
-
-  const loadProblems = async () => {
+  const loadProblems = useCallback(async () => {
     try {
       setLoading(true);
       const response = await fetch(`http://localhost:8080/api/problems/topic/${topicId}?userId=${userId}`);
@@ -52,7 +48,11 @@ const ProblemList: React.FC<ProblemListProps> = ({ topicId, topicName, userId, o
     } finally {
       setLoading(false);
     }
-  };
+  }, [topicId, userId]);
+
+  useEffect(() => {
+    loadProblems();
+  }, [loadProblems]);
 
   const toggleCompletion = async (problemId: number) => {
     try {
