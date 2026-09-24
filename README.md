@@ -2,7 +2,7 @@
 
 SunChillFlower is a minimalist, web-based accountability platform designed to turn the solitary grind of LeetCode into a shared journey. By linking your progress with a partner, this tool ensures that "chill" time is earned through consistent problem-solving.
 
-🔗 [sunchillflower.me](sunchillflower.me)
+[![Live Application](https://img.shields.io/badge/Live_Application-Open_SunChillFlower-7C3AED?style=for-the-badge)](https://sunchillflower.me)
 
 ### 🚀 The Concept
 
